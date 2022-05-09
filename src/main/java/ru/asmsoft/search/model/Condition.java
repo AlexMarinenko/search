@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Search condition for specification
+ * @param <T> type of Condition value
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

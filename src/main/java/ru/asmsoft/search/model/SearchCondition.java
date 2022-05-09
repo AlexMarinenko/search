@@ -11,6 +11,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Search condition DTO
+ */
 @Data
 @NoArgsConstructor
 public class SearchCondition {

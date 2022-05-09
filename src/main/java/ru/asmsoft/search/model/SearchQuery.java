@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Search query DTO
+ */
 @Data
 @NoArgsConstructor
 public class SearchQuery {

@@ -1,6 +1,11 @@
 package ru.asmsoft.search.model;
 
+/**
+ * Available operations
+ */
 public class Operations {
+
+    private Operations() {}
 
     public final static String EQUALS = "=";
     public final static String NOT_EQUALS = "!=";
