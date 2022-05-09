@@ -1,9 +1,9 @@
-package com.smartos.search.service;
+package ru.asmsoft.search.service;
 
-import com.smartos.search.model.Pager;
-import com.smartos.search.model.SearchQuery;
-import com.smartos.search.model.SearchResult;
-import com.smartos.search.specification.SpecificationBuilder;
+import ru.asmsoft.search.specification.SpecificationBuilder;
+import ru.asmsoft.search.model.Pager;
+import ru.asmsoft.search.model.SearchQuery;
+import ru.asmsoft.search.model.SearchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

@@ -1,8 +1,8 @@
-package com.smartos.search.specification;
+package ru.asmsoft.search.specification;
 
-import com.smartos.search.model.Condition;
-import com.smartos.search.model.SearchCondition;
-import com.smartos.search.model.SearchQuery;
+import ru.asmsoft.search.model.Condition;
+import ru.asmsoft.search.model.SearchCondition;
+import ru.asmsoft.search.model.SearchQuery;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;

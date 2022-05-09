@@ -1,4 +1,4 @@
-package com.smartos.search.model;
+package ru.asmsoft.search.model;
 
 public enum FieldType {
     BOOLEAN, BYTE, CHARACTER, SHORT, INTEGER, LONG, FLOAT, DOUBLE, BIGINTEGER, BIGDECIMAL, DATE, DATETIME, STRING

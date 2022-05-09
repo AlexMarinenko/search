@@ -1,7 +1,7 @@
-package com.smartos.search.specification;
+package ru.asmsoft.search.specification;
 
-import com.smartos.search.model.Condition;
-import com.smartos.search.model.Operations;
+import ru.asmsoft.search.model.Condition;
+import ru.asmsoft.search.model.Operations;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

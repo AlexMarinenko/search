@@ -1,9 +1,9 @@
-package com.smartos.search.config;
+package ru.asmsoft.search.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan({"com.smartos.search"})
+@ComponentScan({"ru.asmsoft.search"})
 public class Config {
 }

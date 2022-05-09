@@ -1,4 +1,4 @@
-package com.smartos.search.model;
+package ru.asmsoft.search.model;
 
 public enum Logic {
     AND, OR
