@@ -18,9 +18,8 @@ public class SpecificationBuilder<T> {
     private final Class<T> entityClass;
     private final List<Condition<? extends Comparable<?>>> conditions = new ArrayList<>();
 
-    public SpecificationBuilder() {
-        this.entityClass = (Class<T>) ((ParameterizedType) getClass()
-                .getGenericSuperclass()).getActualTypeArguments()[0];
+    public SpecificationBuilder(Class<T> entityClass) {
+        this.entityClass = entityClass;
     }
 
     public SpecificationBuilder<T> withCondition(Condition<? extends Comparable<?>> condition){
