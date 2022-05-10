@@ -1,9 +1,5 @@
 package ru.asmsoft.search.service;
 
-import ru.asmsoft.search.specification.SpecificationBuilder;
-import ru.asmsoft.search.model.Pager;
-import ru.asmsoft.search.model.SearchQuery;
-import ru.asmsoft.search.model.SearchResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import ru.asmsoft.search.model.Pager;
+import ru.asmsoft.search.model.SearchQuery;
+import ru.asmsoft.search.model.SearchResult;
+import ru.asmsoft.search.specification.SpecificationBuilder;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +34,9 @@ abstract public class SearchService<T, R extends JpaSpecificationExecutor<T>> {
 
         Pageable pageRequest = PageRequest.of(pager.getPage(), pager.getSize(), sort);
 
-        Specification<T> specification = new SpecificationBuilder().build(query);
+
+
+        Specification<T> specification = new SpecificationBuilder<T>().build(query);
         Page<T> page = repository.findAll(specification, pageRequest);
 
         return SearchResult.of(page, pager);

@@ -33,7 +33,7 @@ public class CustomSpecification<T> implements Specification<T> {
             )
             .forEach(condition -> {
                 Predicate p = fromCondition(root, builder, condition);
-                switch (condition.getLogic()) {
+                switch (condition.getExpression()) {
                     case AND:
                         result.set(builder.and(result.get(), p));
                         break;
