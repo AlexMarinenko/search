@@ -15,13 +15,13 @@ For maven:
 <dependency>
     <groupId>ru.asmsoft</groupId>
     <artifactId>search</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
 For gradle: 
 ```bash
-implementation 'ru.asmsoft:search:1.0.0'
+implementation 'ru.asmsoft:search:1.1.0'
 ```
 
 ### 2. Entity
