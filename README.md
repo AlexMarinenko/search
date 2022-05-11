@@ -15,13 +15,13 @@ For maven:
 <dependency>
     <groupId>ru.asmsoft</groupId>
     <artifactId>search</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
 </dependency>
 ```
 
 For gradle: 
 ```bash
-implementation 'ru.asmsoft:search:1.1.1'
+implementation 'ru.asmsoft:search:1.1.2'
 ```
 
 ### 2. Entity
@@ -98,7 +98,7 @@ public class UserSearchController implements SearchController<User> {
 Request consists of 3 sections:
 - `conditions` which contains logical sets to filter the data. 
 - `pager` which defines the pagination parameters for the results. This section has `page=0` and `size=10` by default if not specified.
-- `sort` is responsible for sorting pzrameters
+- `sort` is responsible for sorting parameters
 
 #### Request example:
 
@@ -175,7 +175,7 @@ Request consists of 3 sections:
 
 Response has 2 sections:
 - `items` which contains the results of the search in an array of DTOs
-- `metadata` which contains the `pagination` settings, `count` of elements in the resulting array and `total` elements available in the database.
+- `metadata` which contains the `pagination` parameters, `count` of elements in the resulting array and `total` elements available in the database according to the search conditions.
 
 #### Response example:
 
