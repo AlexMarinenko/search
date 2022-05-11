@@ -14,6 +14,7 @@ import ru.asmsoft.search.specification.SpecificationBuilder;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 abstract public class SearchService<T, R extends JpaSpecificationExecutor<T>> {
@@ -26,6 +27,11 @@ abstract public class SearchService<T, R extends JpaSpecificationExecutor<T>> {
         this.entityClass = (Class<T>) ((ParameterizedType)getClass().getGenericSuperclass()).getActualTypeArguments()[0];
     }
 
+    public <E> SearchResult<E> search(SearchQuery query, Function<T, E> converter) {
+        SearchResult<T> result = search(query);
+        List<E> convertedResults = result.getItems().stream().map(converter).collect(Collectors.toList());
+        return new SearchResult<>(convertedResults, result.getMetadata());
+    }
 
     public SearchResult<T> search(SearchQuery query) {
 
