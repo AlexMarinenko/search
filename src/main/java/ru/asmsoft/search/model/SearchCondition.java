@@ -1,5 +1,6 @@
 package ru.asmsoft.search.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,10 +19,15 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class SearchCondition {
+
+    @Schema(description = "Expression to join the condition. AND and OR values available")
     private Expression expression;
-    private FieldType type;
+
+    @Schema(description = "The field name to apply the condition to")
     private String field;
+    @Schema(description = "The operator for condition. Available operators: \"=\", \"!=\", \">=\", \"<=\", \"LIKE\", \"IN\"")
     private String operator;
+    @Schema(description = "The second operand for condition. Array for \"IN\"")
     private Object value;
 
     public Condition<? extends Comparable<?>> into(Class<?> fieldType) {

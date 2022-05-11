@@ -7,10 +7,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SpecificationBuilder<T> {
@@ -34,10 +31,12 @@ public class SpecificationBuilder<T> {
 
     public Specification<T> build(SearchQuery query) {
         final Map<String, Class<?>> fields = extractFields();
-        conditions.addAll(query.getConditions().stream()
+        if (query.getConditions() != null) {
+            conditions.addAll(query.getConditions().stream()
                 .filter(condition -> fields.containsKey(condition.getField()))
                 .map(condition -> condition.into(fields.get(condition.getField())))
                 .collect(Collectors.toList()));
+        }
         return new CustomSpecification<>(conditions);
     }
 
