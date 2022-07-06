@@ -46,9 +46,7 @@ abstract public class SearchService<T, R extends JpaSpecificationExecutor<T>> {
 
         Pageable pageRequest = PageRequest.of(pager.getPage(), pager.getSize(), sort);
 
-
-
-        Specification<T> specification = new SpecificationBuilder(entityClass).build(query);
+        Specification<T> specification = new SpecificationBuilder<>(entityClass).build(query);
         Page<T> page = repository.findAll(specification, pageRequest);
 
         return SearchResult.of(page, pager);
