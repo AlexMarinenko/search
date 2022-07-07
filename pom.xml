@@ -9,7 +9,7 @@
     </parent>
     <groupId>ru.asmsoft</groupId>
     <artifactId>search</artifactId>
-    <version>1.1.4-SNAPSHOT</version>
+    <version>1.1.4</version>
     <name>search</name>
     <description>search</description>
     <properties>
@@ -36,7 +36,7 @@
         <url>https://github.com/asmsoft/search</url>
         <connection>scm:git:https://github.com/asmsoft/search</connection>
         <developerConnection>scm:git:ssh://git@github.com/asmsoft/search.git</developerConnection>
-      <tag>1.1.2</tag>
+      <tag>1.1.4</tag>
   </scm>
 
     <distributionManagement>
