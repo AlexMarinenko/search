@@ -15,7 +15,7 @@ For maven:
 <dependency>
     <groupId>ru.asmsoft</groupId>
     <artifactId>search</artifactId>
-    <version>1.1.2</version>
+    <version>1.1.4</version>
 </dependency>
 ```
 
