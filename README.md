@@ -11,6 +11,7 @@ Search library for spring data jpa applications.
 First of all, let's add the search dependency into the project.
 
 For maven:
+
 ```xml
 <dependency>
     <groupId>ru.asmsoft</groupId>
@@ -19,7 +20,8 @@ For maven:
 </dependency>
 ```
 
-For gradle: 
+For gradle:
+
 ```bash
 implementation 'ru.asmsoft:search:1.1.2'
 ```
@@ -60,8 +62,10 @@ public interface UserRepository extends JpaSpecificationExecutor<User> {
 
 ### 4. Service
 
-You can build default search service for `User` entity extending `SearchService<T, R extends JpaSpecificationExecutor<T>>`.
-Use `UserRepository` created in the previous step to inject it with the constructor into service instance.
+You can build default search service for `User` entity
+extending `SearchService<T, R extends JpaSpecificationExecutor<T>>`.
+Use `UserRepository` created in the previous step to inject it with the
+constructor into service instance.
 
 ```java
 @Service
@@ -75,7 +79,8 @@ public class UserSearchService extends SearchService<User, UserRepository> {
 ### 5. Controller
 
 Use the service either with a Controller or with a Component, Facade, etc.
-For example, let's implement `SearchController<T>` for `User` and autowire the `UserSearchService` into it as shown below.
+For example, let's implement `SearchController<T>` for `User` and autowire
+the `UserSearchService` into it as shown below.
 
 ```java
 @RestController
@@ -96,8 +101,10 @@ public class UserSearchController implements SearchController<User> {
 ### 6. Request:
 
 Request consists of 3 sections:
-- `conditions` which contains logical sets to filter the data. 
-- `pager` which defines the pagination parameters for the results. This section has `page=0` and `size=10` by default if not specified.
+
+- `conditions` which contains logical sets to filter the data.
+- `pager` which defines the pagination parameters for the results. This section
+  has `page=0` and `size=10` by default if not specified.
 - `sort` is responsible for sorting parameters
 
 #### Request example:
@@ -116,7 +123,9 @@ Request consists of 3 sections:
       "field": "id",
       "operator": "IN",
       "values": [
-        1, 2, 3
+        1,
+        2,
+        3
       ]
     }
   ],
@@ -170,12 +179,14 @@ Request consists of 3 sections:
 +------------------+---------+---------+
 ```
 
-
 ### 7. Response
 
 Response has 2 sections:
+
 - `items` which contains the results of the search in an array of DTOs
-- `metadata` which contains the `pagination` parameters, `count` of elements in the resulting array and `total` elements available in the database according to the search conditions.
+- `metadata` which contains the `pagination` parameters, `count` of elements in
+  the resulting array and `total` elements available in the database according
+  to the search conditions.
 
 #### Response example:
 

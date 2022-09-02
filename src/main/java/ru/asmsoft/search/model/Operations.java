@@ -1,19 +1,31 @@
 package ru.asmsoft.search.model;
 
-/**
- * Available operations
- */
+/** Available operations. */
 public class Operations {
 
-    private Operations() {}
+  /** Equals operation. */
+  public static final String EQUALS = "=";
 
-    public final static String EQUALS = "=";
-    public final static String NOT_EQUALS = "!=";
-    public final static String LIKE = "LIKE";
-    public final static String GREATER = ">";
-    public final static String GREATER_OR_EQUALS = ">=";
-    public final static String LESS = "<";
-    public final static String LESS_OR_EQUALS = "<=";
-    public final static String IN = "IN";
+  /** Not equals operation. */
+  public static final String NOT_EQUALS = "!=";
 
+  /** Like operation. */
+  public static final String LIKE = "LIKE";
+
+  /** Greater than operation. */
+  public static final String GREATER = ">";
+
+  /** Greater or equals operation. */
+  public static final String GREATER_OR_EQUALS = ">=";
+
+  /** Less than operation. */
+  public static final String LESS = "<";
+
+  /** Less or equals operation. */
+  public static final String LESS_OR_EQUALS = "<=";
+
+  /** In operation. */
+  public static final String IN = "IN";
+
+  private Operations() {}
 }
