@@ -5,12 +5,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.jdbc.core.JdbcAggregateOperations;
+import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.query.Query;
+import org.springframework.data.util.Streamable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import ru.asmsoft.search.model.Pager;
 import ru.asmsoft.search.model.SearchQuery;
 import ru.asmsoft.search.model.SearchResult;
@@ -19,18 +18,18 @@ import ru.asmsoft.search.specification.SpecificationBuilder;
 /**
  * Search service.
  */
-public abstract class SearchService<T, R extends JpaSpecificationExecutor<T>> {
+public abstract class SearchService<T> {
 
-  private final R repository;
+  private final JdbcAggregateOperations operations;
   private final Class<T> entityClass;
 
   /**
    * Search service constructor.
    *
-   * @param repository repository to use for search
+   * @param operations JDBC aggregate operations to use for search
    */
-  protected SearchService(R repository) {
-    this.repository = repository;
+  protected SearchService(JdbcAggregateOperations operations) {
+    this.operations = operations;
     this.entityClass =
         (Class<T>)
             ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -72,17 +71,19 @@ public abstract class SearchService<T, R extends JpaSpecificationExecutor<T>> {
             ? new Pager(0, 10)
             : query.getPager();
 
-    Pageable pageRequest = PageRequest.of(
-            pager.getPage(),
-            pager.getSize(),
-            sort
-    );
-
-    Specification<T> specification = new SpecificationBuilder<>(entityClass)
+    Criteria criteria = new SpecificationBuilder<>(entityClass)
             .build(query);
 
-    Page<T> page = repository.findAll(specification, pageRequest);
+    Query findQuery = Query.query(criteria).sort(sort)
+            .limit(pager.getSize())
+            .offset((long) pager.getPage() * pager.getSize());
 
-    return SearchResult.of(page, pager);
+    List<T> items = Streamable.of(operations.findAll(findQuery, entityClass)).toList();
+
+    long total = Streamable.of(operations.findAll(Query.query(criteria).sort(sort), entityClass))
+            .toList()
+            .size();
+
+    return SearchResult.of(items, pager, total);
   }
 }
