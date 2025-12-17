@@ -5,12 +5,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
+import org.springframework.data.relational.core.query.CriteriaDefinition;
+import org.springframework.data.relational.core.query.Query;
 import ru.asmsoft.search.model.Pager;
 import ru.asmsoft.search.model.SearchQuery;
 import ru.asmsoft.search.model.SearchResult;
@@ -19,18 +22,18 @@ import ru.asmsoft.search.specification.SpecificationBuilder;
 /**
  * Search service.
  */
-public abstract class SearchService<T, R extends JpaSpecificationExecutor<T>> {
+public abstract class SearchService<T> {
 
-  private final R repository;
+  private final JdbcAggregateTemplate jdbcAggregateTemplate;
   private final Class<T> entityClass;
 
   /**
    * Search service constructor.
    *
-   * @param repository repository to use for search
+   * @param jdbcAggregateTemplate aggregate template to use for search
    */
-  protected SearchService(R repository) {
-    this.repository = repository;
+  protected SearchService(JdbcAggregateTemplate jdbcAggregateTemplate) {
+    this.jdbcAggregateTemplate = jdbcAggregateTemplate;
     this.entityClass =
         (Class<T>)
             ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
@@ -78,10 +81,23 @@ public abstract class SearchService<T, R extends JpaSpecificationExecutor<T>> {
             sort
     );
 
-    Specification<T> specification = new SpecificationBuilder<>(entityClass)
+    CriteriaDefinition criteriaDefinition = new SpecificationBuilder<>(entityClass)
             .build(query);
 
-    Page<T> page = repository.findAll(specification, pageRequest);
+    Query querySpecification = Query.query(criteriaDefinition)
+        .sort(sort)
+        .limit(pager.getSize())
+        .offset((long) pager.getPage() * pager.getSize());
+
+    List<T> items =
+        StreamSupport.stream(
+                jdbcAggregateTemplate.findAll(querySpecification, entityClass).spliterator(),
+                false)
+            .toList();
+
+    long total = jdbcAggregateTemplate.count(Query.query(criteriaDefinition), entityClass);
+
+    Page<T> page = new PageImpl<>(items, pageRequest, total);
 
     return SearchResult.of(page, pager);
   }

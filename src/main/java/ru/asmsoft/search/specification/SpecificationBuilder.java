@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.relational.core.query.CriteriaDefinition;
 import ru.asmsoft.search.model.Condition;
 import ru.asmsoft.search.model.SearchQuery;
 
@@ -56,7 +56,7 @@ public class SpecificationBuilder<T> {
    * @param query the search query
    * @return Specification
    */
-  public Specification<T> build(SearchQuery query) {
+  public CriteriaDefinition build(SearchQuery query) {
     final Map<String, Class<?>> fields = extractFields();
     if (query.getConditions() != null) {
       conditions.addAll(
@@ -66,7 +66,7 @@ public class SpecificationBuilder<T> {
                       condition.into(fields.get(condition.getField())))
               .toList());
     }
-    return new CustomSpecification<>(conditions);
+    return new CustomSpecification<>(conditions).toCriteria();
   }
 
   private Map<String, Class<?>> extractFields() {
