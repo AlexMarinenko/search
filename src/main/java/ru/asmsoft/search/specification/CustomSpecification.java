@@ -1,15 +1,13 @@
 package ru.asmsoft.search.specification;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.query.CriteriaDefinition;
 import ru.asmsoft.search.model.Condition;
 import ru.asmsoft.search.model.Operations;
 
@@ -21,51 +19,48 @@ import ru.asmsoft.search.model.Operations;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class CustomSpecification<T> implements Specification<T> {
+public class CustomSpecification<T> {
 
   /** Conditions list. */
   private final List<Condition<? extends Comparable<?>>> conditions;
 
   /**
-   * Build Predicate from parameters.
+   * Build Criteria from parameters.
    *
-   * @param root from root
-   * @param builder criteria builder
    * @param condition condition to handle
-   * @return Predicate
-   * @param <T> the type of Root
+   * @return Criteria
    * @param <E> the type of Condition
    */
-  private static <T, E extends Comparable<E>> Predicate fromCondition(
-      Root<T> root, CriteriaBuilder builder, Condition<E> condition) {
+  private static <E extends Comparable<E>> Criteria fromCondition(Condition<E> condition) {
     switch (condition.getOperator()) {
       case Operations.EQUALS:
-        return builder.equal(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).is(condition.getValue());
       case Operations.NOT_EQUALS:
-        return builder.notEqual(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).not(condition.getValue());
       case Operations.LIKE:
-        return builder.like(root.get(condition.getField()), (String) condition.getValue());
+        return Criteria.where(condition.getField()).like(condition.getValue().toString());
       case Operations.GREATER:
-        return builder.greaterThan(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).greaterThan(condition.getValue());
       case Operations.LESS:
-        return builder.lessThan(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).lessThan(condition.getValue());
       case Operations.GREATER_OR_EQUALS:
-        return builder.greaterThanOrEqualTo(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).greaterThanOrEquals(condition.getValue());
       case Operations.LESS_OR_EQUALS:
-        return builder.lessThanOrEqualTo(root.get(condition.getField()), condition.getValue());
+        return Criteria.where(condition.getField()).lessThanOrEquals(condition.getValue());
       case Operations.IN:
-        return root.get(condition.getField()).in(condition.getValues());
+        return Criteria.where(condition.getField()).in(condition.getValues());
       default:
         return null;
     }
   }
 
   /**
-   * {@inheritDoc}
+   * Create {@link CriteriaDefinition} based on provided conditions.
+   *
+   * @return built {@link CriteriaDefinition}
    */
-  @Override
-  public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-    final AtomicReference<Predicate> result = new AtomicReference<>(builder.conjunction());
+  public CriteriaDefinition toCriteria() {
+    final AtomicReference<Criteria> result = new AtomicReference<>();
     conditions.stream()
         .filter(
             condition ->
@@ -75,18 +70,29 @@ public class CustomSpecification<T> implements Specification<T> {
                     && (condition.getValue() != null || condition.getValues() != null))
         .forEach(
             condition -> {
-              Predicate p = fromCondition(root, builder, condition);
+              Criteria criteria = fromCondition(condition);
+              if (criteria == null) {
+                return;
+              }
+
+              if (result.get() == null) {
+                result.set(criteria);
+                return;
+              }
+
+              Criteria current = result.get();
               switch (condition.getExpression()) {
                 case AND:
-                  result.set(builder.and(result.get(), p));
+                  result.set(current.and(criteria));
                   break;
                 case OR:
-                  result.set(builder.or(result.get(), p));
+                  result.set(current.or(criteria));
                   break;
                 default:
                   // NOP
               }
             });
-    return result.get();
+
+    return Objects.requireNonNullElseGet(result.get(), Criteria::empty);
   }
 }
