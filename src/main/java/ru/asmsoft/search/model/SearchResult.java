@@ -3,7 +3,6 @@ package ru.asmsoft.search.model;
 import java.util.Collections;
 import java.util.List;
 import lombok.Data;
-import org.springframework.data.domain.Page;
 
 /**
  * Search result DTO.
@@ -18,16 +17,17 @@ public class SearchResult<T> {
   /**
    * Search result construction method.
    *
-   * @param page page with results
+   * @param items the items to include
    * @param pager pager object
+   * @param total total items count
    * @param <T> type
    * @return SearchResult
    */
-  public static <T> SearchResult<T> of(Page<T> page, Pager pager) {
+  public static <T> SearchResult<T> of(List<T> items, Pager pager, long total) {
     return new SearchResult<>(
-        page.getContent(),
+        items,
         new Metadata(
-            pager.getPage(), pager.getSize(), page.getNumberOfElements(), page.getTotalElements()));
+            pager.getPage(), pager.getSize(), items.size(), total));
   }
 
   /**
